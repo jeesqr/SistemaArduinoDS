@@ -9,6 +9,16 @@ public class DatabaseManager {
 
     public DatabaseManager() {
         createTableIfNotExists();
+        loadDriver();
+    }
+
+    private void loadDriver() {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            System.out.println("[BD] Driver SQLite cargado correctamente.");
+        } catch (ClassNotFoundException e) {
+            System.out.println("[BD] ERROR cargando driver: " + e.getMessage());
+        }
     }
 
     private void createTableIfNotExists() {
@@ -41,7 +51,7 @@ public class DatabaseManager {
             ps.setString(4, fecha);
             ps.setString(5, hora);
             ps.executeUpdate();
-            System.out.println("[BD] Registro insertado: " + x + "," + y + "," + z);
+            System.out.println("[BD] Registro insertado: " + x + "," + y + "," + z + " - " + fecha + " " + hora);
         } catch (Exception e) {
             System.out.println("[BD] ERROR al insertar: " + e.getMessage());
         }
@@ -50,7 +60,7 @@ public class DatabaseManager {
     public ArrayList<String> queryData(String fecha) {
         ArrayList<String> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM datos_sensor WHERE fecha_de_captura = ?";
+        String sql = "SELECT x, y, z FROM datos_sensor WHERE fecha_de_captura = ? ORDER BY hora_de_captura";
 
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -59,14 +69,15 @@ public class DatabaseManager {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
+                // Solo devolver x,y,z (el cliente solo necesita estos para el gráfico)
                 list.add(
                         rs.getInt("x") + "," +
                                 rs.getInt("y") + "," +
-                                rs.getInt("z") + "," +
-                                rs.getString("fecha_de_captura") + "," +
-                                rs.getString("hora_de_captura")
+                                rs.getInt("z")
                 );
             }
+
+            System.out.println("[BD] Consulta para fecha " + fecha + ": " + list.size() + " registros encontrados");
 
         } catch (Exception e) {
             System.out.println("[BD] ERROR consultando: " + e.getMessage());

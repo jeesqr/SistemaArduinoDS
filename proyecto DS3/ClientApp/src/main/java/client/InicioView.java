@@ -20,11 +20,11 @@ public class InicioView extends JFrame {
         logo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel titulo = new JLabel("Sistema de monitoreo");
-        titulo.setFont(new Font("Arial", Font.BOLD, 22));
+        titulo.setFont(new Font("Times", Font.BOLD, 22));
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel autor = new JLabel("Juan Carlos Araiza, Desarrollo 3");
-        autor.setFont(new Font("Arial", Font.PLAIN, 16));
+        JLabel autor = new JLabel("Jesús Esquer, Desarrollo 3");
+        autor.setFont(new Font("Times", Font.PLAIN, 16));
         autor.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton btnMonitor = new JButton("Monitor");
